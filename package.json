@@ -34,7 +34,8 @@
       "provider": "github",
       "owner": "Scrow-rgb",
       "repo": "camwatch",
-      "private": true
+      "private": true,
+      "releaseType": "release"
     }
   },
   "devDependencies": {
