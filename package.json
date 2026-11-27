@@ -1,0 +1,47 @@
+{
+  "name": "camwatch",
+  "version": "1.0.0",
+  "description": "CamWatch - monitor de câmeras",
+  "main": "main.js",
+  "author": "CamWatch",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis",
+    "release": "electron-builder --win nsis --publish always"
+  },
+  "build": {
+    "appId": "com.camwatch.app",
+    "productName": "CamWatch",
+    "files": [
+      "main.js",
+      "server.js",
+      "public/**/*"
+    ],
+    "directories": {
+      "output": "dist-desktop"
+    },
+    "win": {
+      "target": "nsis",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "runAfterFinish": true,
+      "artifactName": "CamWatch-Setup-${version}.exe"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Scrow-rgb",
+      "repo": "camwatch",
+      "private": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  }
+}

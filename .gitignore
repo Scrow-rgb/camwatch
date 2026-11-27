@@ -1,0 +1,13 @@
+node_modules
+.vercel
+agent/config.json
+data
+local-antigo
+.env*
+
+.vercel
+dist/
+dist-desktop/
+nuvem-vercel/
+sea-prep.blob
+*.log

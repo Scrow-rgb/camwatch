@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CamWatch</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="sidebar" id="sidebar">
+  <div class="side-logo">
+    <svg class="ico logo-ico" viewBox="0 0 24 24"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg>
+    <span class="side-label logo-text">CamWatch</span>
+  </div>
+  <div class="side-server side-label">Monitor de câmeras</div>
+  <nav id="menu">
+    <a href="#/dashboard" data-r="dashboard"><svg class="ico" viewBox="0 0 24 24"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg><span class="side-label">Dashboard</span></a>
+    <a href="#/incidentes" data-r="incidentes"><svg class="ico" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span class="side-label">Incidentes</span><b id="badge" class="count hidden">0</b></a>
+    <a href="#/cameras" data-r="cameras"><svg class="ico" viewBox="0 0 24 24"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg><span class="side-label">Câmeras</span></a>
+    <a href="#/eventos" data-r="eventos"><svg class="ico" viewBox="0 0 24 24"><path d="M3 12h.01M3 18h.01M3 6h.01M8 12h13M8 18h13M8 6h13"/></svg><span class="side-label">Eventos</span></a>
+  </nav>
+  <div class="side-foot">
+    <span class="dot ok" id="conn"></span><span class="side-label" id="conn-text">conectado</span>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <h1 id="title">Dashboard</h1>
+    <div class="top-right"><span id="clock" class="muted"></span><span id="whoami" class="muted"></span><button class="btn sm" id="logout">Sair</button></div>
+  </header>
+  <div id="agent-slot"></div>
+  <div id="alert-slot"></div>
+  <div class="crumbs" id="crumbs"></div>
+  <div id="view" class="view"></div>
+  <footer class="foot">CamWatch · monitoramento de câmeras por IP</footer>
+</div>
+
+<div id="modal" class="modal hidden">
+  <form class="modal-box" id="cam-form">
+    <h3 id="modal-title">Nova câmera</h3>
+    <div id="form-errors" class="form-errors hidden"></div>
+    <label>Nome <input name="name" required placeholder="Ex.: Portaria - Câmera 01"></label>
+    <label>IP / Host <input name="ip" required placeholder="192.168.1.50"></label>
+    <label>Grupo / Local <input name="group" placeholder="Ex.: Matriz" list="groups"></label>
+    <datalist id="groups"></datalist>
+    <div class="row">
+      <label>Método
+        <select name="method"><option value="icmp">Ping (ICMP)</option><option value="tcp">Porta TCP</option></select>
+      </label>
+      <label id="port-label">Porta TCP <input name="port" type="number" min="1" max="65535" value="554"></label>
+    </div>
+    <div class="row">
+      <label>Intervalo (s) <input name="interval" type="number" min="2" max="3600" value="10"></label>
+      <label>Falhas p/ cair <input name="retries" type="number" min="1" max="20" value="3"></label>
+    </div>
+    <label class="check"><input name="enabled" type="checkbox" checked> Monitoramento ativo</label>
+    <div class="modal-actions">
+      <button type="button" class="btn" id="cancel">Cancelar</button>
+      <button type="submit" class="btn primary">Salvar</button>
+    </div>
+  </form>
+</div>
+<div id="import-modal" class="modal hidden">
+  <div class="modal-box" style="width:720px">
+    <h3>Importar câmeras de um CSV</h3>
+    <div class="muted">Colunas: <b>nome</b>, <b>ip</b> (obrigatórias), grupo, metodo (ping ou tcp), porta, intervalo, tentativas, ativo (sim/não). Aceita separador ; ou , e a primeira linha como cabeçalho. No Excel: Salvar como → CSV.</div>
+    <div class="row" style="align-items:center;flex:none">
+      <input type="file" id="imp-file" accept=".csv,.txt,text/csv" style="height:auto;border:0;padding:0;flex:1">
+      <button type="button" class="btn" id="imp-template">Baixar modelo</button>
+    </div>
+    <div id="imp-error" class="form-errors hidden"></div>
+    <div id="imp-sum" class="muted"></div>
+    <div class="tbl-wrap" style="max-height:280px;overflow:auto" id="imp-preview-wrap"><table><thead><tr><th>Linha</th><th>Nome</th><th>IP</th><th>Situação</th></tr></thead><tbody id="imp-rows"><tr><td class="empty" colspan="4">Escolha um arquivo CSV.</td></tr></tbody></table></div>
+    <div class="modal-actions">
+      <button type="button" class="btn" id="imp-cancel">Cancelar</button>
+      <button type="button" class="btn primary" id="imp-go" disabled>Importar</button>
+    </div>
+  </div>
+</div>
+<div id="login" class="login hidden">
+  <form class="login-box" id="login-form">
+    <div class="login-logo"><svg class="ico" viewBox="0 0 24 24"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg> CamWatch</div>
+    <div id="login-error" class="form-errors hidden"></div>
+    <label>Usuário <input name="user" autocomplete="username" required autofocus></label>
+    <label>Senha <input name="password" type="password" autocomplete="current-password" required></label>
+    <button class="btn primary" type="submit" style="height:30px">Entrar</button>
+  </form>
+</div>
+<div id="toasts" class="toasts"></div>
+<script src="app.js"></script>
+</body>
+</html>
