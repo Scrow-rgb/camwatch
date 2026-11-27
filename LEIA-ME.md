@@ -1,7 +1,7 @@
 # CamWatch
 
 Programa de desktop (janela própria, sem navegador). Instale com `CamWatch-Setup-<versão>.exe`.
-Dados ficam em `%APPDATA%mwatchdata`.
+Dados ficam em `%APPDATA%\camwatch\data`.
 
 ## Atualização automática
 O app confere o GitHub ao abrir e de hora em hora, baixa a versão nova sozinho e avisa para reiniciar. Não precisa de token.
