@@ -1,6 +1,6 @@
 {
   "name": "camwatch",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CamWatch - monitor de câmeras",
   "main": "main.js",
   "author": "CamWatch",

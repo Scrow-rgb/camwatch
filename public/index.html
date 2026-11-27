@@ -63,15 +63,15 @@
 </div>
 <div id="import-modal" class="modal hidden">
   <div class="modal-box" style="width:720px">
-    <h3>Importar câmeras de um CSV</h3>
-    <div class="muted">Colunas: <b>nome</b>, <b>ip</b> (obrigatórias), grupo, metodo (ping ou tcp), porta, intervalo, tentativas, ativo (sim/não). Aceita separador ; ou , e a primeira linha como cabeçalho. No Excel: Salvar como → CSV.</div>
+    <h3>Importar câmeras (CSV ou XML do Zabbix)</h3>
+    <div class="muted">Colunas: <b>nome</b>, <b>ip</b> (obrigatórias), grupo, metodo (ping ou tcp), porta, intervalo, tentativas, ativo (sim/não). Aceita separador ; ou , e a primeira linha como cabeçalho. No Excel: Salvar como → CSV. Também aceita a exportação de hosts do Zabbix (.xml).</div>
     <div class="row" style="align-items:center;flex:none">
-      <input type="file" id="imp-file" accept=".csv,.txt,text/csv" style="height:auto;border:0;padding:0;flex:1">
+      <input type="file" id="imp-file" accept=".csv,.txt,.xml,text/csv,text/xml" style="height:auto;border:0;padding:0;flex:1">
       <button type="button" class="btn" id="imp-template">Baixar modelo</button>
     </div>
     <div id="imp-error" class="form-errors hidden"></div>
     <div id="imp-sum" class="muted"></div>
-    <div class="tbl-wrap" style="max-height:280px;overflow:auto" id="imp-preview-wrap"><table><thead><tr><th>Linha</th><th>Nome</th><th>IP</th><th>Situação</th></tr></thead><tbody id="imp-rows"><tr><td class="empty" colspan="4">Escolha um arquivo CSV.</td></tr></tbody></table></div>
+    <div class="tbl-wrap" style="max-height:280px;overflow:auto" id="imp-preview-wrap"><table><thead><tr><th>Linha</th><th>Nome</th><th>IP</th><th>Situação</th></tr></thead><tbody id="imp-rows"><tr><td class="empty" colspan="4">Escolha um arquivo CSV ou XML.</td></tr></tbody></table></div>
     <div class="modal-actions">
       <button type="button" class="btn" id="imp-cancel">Cancelar</button>
       <button type="button" class="btn primary" id="imp-go" disabled>Importar</button>

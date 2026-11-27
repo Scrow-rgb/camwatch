@@ -427,7 +427,29 @@ function parseCsv(text) {
   row.push(cur); if (row.some((v) => v.trim())) rows.push(row);
   return rows;
 }
+// Exportação de hosts do Zabbix (zbx_export_hosts.xml): usa o nome e o IP da 1ª interface.
+// Grupo principal: o primeiro que começa com "CFTV"; senão o primeiro que não seja o genérico "Cameras".
+function xmlToCameras(text) {
+  const doc = new DOMParser().parseFromString(text, 'application/xml');
+  if (doc.querySelector('parsererror')) throw new Error('XML inválido.');
+  const kids = (el, tag) => [...el.children].filter((c) => c.tagName === tag);
+  const val = (el, tag) => (kids(el, tag)[0]?.textContent || '').trim();
+  const root = doc.documentElement;
+  const hostsEl = kids(root, 'hosts')[0];
+  if (!hostsEl) throw new Error('Este XML não parece ser uma exportação de hosts do Zabbix.');
+  return kids(hostsEl, 'host').map((h, i) => {
+    const ifaces = kids(kids(h, 'interfaces')[0] || h, 'interface');
+    const ifc = ifaces.find((x) => val(x, 'ip')) || ifaces[0];
+    const groups = kids(kids(h, 'groups')[0] || h, 'group').map((g) => val(g, 'name')).filter(Boolean);
+    const group = groups.find((g) => /^cftv/i.test(g)) || groups.find((g) => norm(g) !== 'cameras') || groups[0] || '';
+    const item = { line: i + 1, name: val(h, 'name') || val(h, 'host'), ip: ifc ? (val(ifc, 'ip') || val(ifc, 'dns')) : '', method: 'icmp' };
+    if (group) item.group = group;
+    if (val(h, 'status') === 'DISABLED') item.enabled = false;
+    return item;
+  });
+}
 function csvToCameras(text) {
+  if (text.trimStart().startsWith('<')) return xmlToCameras(text); // trimStart também remove o BOM
   const rows = parseCsv(text);
   if (!rows.length) return [];
   const head = rows[0].map(norm);
