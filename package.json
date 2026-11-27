@@ -1,6 +1,6 @@
 {
   "name": "camwatch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CamWatch - monitor de câmeras",
   "main": "main.js",
   "author": "CamWatch",
@@ -34,7 +34,6 @@
       "provider": "github",
       "owner": "Scrow-rgb",
       "repo": "camwatch",
-      "private": true,
       "releaseType": "release"
     }
   },

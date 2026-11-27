@@ -29,13 +29,6 @@ function createWindow(port) {
 // instala sozinha na próxima vez que o app for fechado.
 function setupAutoUpdate() {
   if (!app.isPackaged) return;
-  // Repositório privado: o token de leitura fica num arquivo local (nunca dentro do .exe).
-  // Coloque o token em <pasta de dados>\update-token.txt (veja LEIA-ME.md).
-  try {
-    const tok = require('fs').readFileSync(path.join(app.getPath('userData'), 'update-token.txt'), 'utf8').trim();
-    if (tok) process.env.GH_TOKEN = tok;
-  } catch { /* sem token: não há como checar atualizações */ }
-  if (!process.env.GH_TOKEN) { console.log('Atualização: update-token.txt não encontrado, checagem desligada.'); return; }
   const { autoUpdater } = require('electron-updater');
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = true;
